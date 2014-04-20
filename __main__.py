@@ -9,19 +9,6 @@ def polygon(pts):
 	return pyscad.Object.create(pyscad.Selection.create(pyscad.Node.create('linear_extrude(1, false) {{ {}; }}'.format(pyscad._str_call('polygon', points = pts, paths = [list(range(len(pts)))])))))
 
 
-class Node:
-	def __init__(self, inside_pts, outside_pts, direction_diff):
-		self.inside_pts = inside_pts
-		self.outside_pts = outside_pts
-		self.direction_diff = direction_diff
-
-
-nodes = {
-	's': Node([(0, -1), (1, 0), (0, 1)], [], 0), # straight
-	'r': Node([(0, 0)], [(-1, 1)], 1), # left
-	'l': Node([(0, 0)], [(-1, -1)], -1) } # right
-
-
 def pattern_size(pattern):
 	size_x = len(pattern[0])
 	size_y = len(pattern)
