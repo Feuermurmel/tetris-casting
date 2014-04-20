@@ -56,12 +56,12 @@ def rotate_pattern(pattern, direction):
 def create_part(pattern):
 	"""Create and return the complete part for one Tetris piece."""
 	
-	wall_thickness = 1
+	wall_thickness = 1.5
 	wall_height = 9
 	tile_size = 8
 	
-	groove_depth = 2 # Depth of each groove.
-	groove_width = 1 # With of one half of the grooves.
+	groove_depth = 1.2 # Depth of each groove.
+	groove_width = 1.2 # With of one half of the grooves.
 	
 	piece_height = wall_height + wall_thickness # Height of the complete part.
 	eps = 1e-3 # Epsilon that will be added to the thickness of some parts to prevent multiple objects sharing a face. This would lead to errors when generating the STL file. 
