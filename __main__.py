@@ -60,8 +60,8 @@ def create_part(pattern):
 	wall_height = 9
 	tile_size = 8
 	
-	groove_depth = 1 # Not yet implemented.
-	groove_width = 1 # Not yet implemented.
+	groove_depth = 2 # Depth of each groove.
+	groove_width = 1 # With of one half of the grooves.
 	
 	piece_height = wall_height + wall_thickness # Height of the complete part.
 	eps = 1e-3 # Epsilon that will be added to the thickness of some parts to prevent multiple objects sharing a face. This would lead to errors when generating the STL file. 
@@ -70,16 +70,18 @@ def create_part(pattern):
 		z = wall_thickness).move(z = -wall_thickness)
 	wall = pyscad.cube.scale(x = wall_thickness, y = tile_size + 2 * eps,
 		z = piece_height).move(x = tile_size, y = -eps, z = -wall_thickness)
-	tile_prism = polygon([(0, 0), (1 + eps, -eps), (-eps, 1 + eps)]).scale(z = tile_size)
-	height_prism = polygon([(-eps, -1 - eps), (1, 0), (-eps, 1 + eps)]).scale(z = piece_height)
+	
+	groove_prism = polygon([(-eps, -eps), (groove_depth + eps, -eps), (-eps, groove_width + eps)])
+	floor_groove = groove_prism.scale(z = tile_size)
+	wall_groove = (groove_prism + groove_prism.scale(y = -1)).scale(z = piece_height)
 	
 	# Individual objects that are put in place of some patterns to build up the complete part.
 	objects = [
 		(['1'], floor),
 		(['10'], wall),
-		(['11'], tile_prism.rotate(x = tau / 4).move(x = tile_size, y = tile_size)),
-		(['10', '00'], height_prism.rotate(z = 0).move(x = tile_size, y = tile_size, z = -wall_thickness)),
-		(['11', '00'], height_prism.rotate(z = -tau / 4).move(x = tile_size, y = tile_size, z = -wall_thickness))]
+		(['11'], floor_groove.rotate(y = -tau / 4).rotate(z = tau / 4).move(x = tile_size, y = tile_size)),
+		(['10', '00'], pyscad.cube.scale(x = wall_thickness, y = wall_thickness, z = piece_height).move(x = tile_size, y = tile_size, z = -wall_thickness)),
+		(['11', '00'], wall_groove.rotate(z = -tau / 4).move(x = tile_size, y = tile_size, z = -wall_thickness))]
 	
 	size_x, size_y = pattern_size(pattern)
 	
